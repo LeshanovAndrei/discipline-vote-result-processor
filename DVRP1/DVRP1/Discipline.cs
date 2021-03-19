@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DVRP1
 {
@@ -17,6 +18,7 @@ namespace DVRP1
             this.max = max;
             this.min = min;
             this.courses = courses;
+            
         }
         ~Discipline()
         {
