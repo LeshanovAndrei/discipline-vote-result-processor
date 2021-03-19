@@ -1,0 +1,9 @@
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\DVRP1.exe.config
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\DVRP1.exe
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\DVRP1.pdb
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.csprojAssemblyReference.cache
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.Properties.Resources.resources
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.csproj.GenerateResource.cache
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.csproj.CoreCompileInputs.cache
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.exe
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.pdb
