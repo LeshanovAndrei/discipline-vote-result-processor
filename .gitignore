@@ -1,2 +1,5 @@
 DVRP1/.vs
-DVRP1/DVRP/bin
+DVRP1/DVRP1/bin
+/.vs
+/DVRP1/DVRP1/obj/Release/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+DVRP1/DVRP1/obj
