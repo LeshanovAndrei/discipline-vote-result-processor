@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/DVRP1/DVRP1/obj
+/DVRP1/DVRP1/bin/Debug
