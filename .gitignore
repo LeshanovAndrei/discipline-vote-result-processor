@@ -1,0 +1,13 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/DVRP1/DVRP1/.vs
+/DVRP1/DVRP1/bin/Debug
+/DVRP1/DVRP1/obj/Debug/DVRP1.Properties.Resources.resources
+/DVRP1/DVRP1/obj/Debug/DVRP1.csproj.CoreCompileInputs.cache
+/DVRP1/DVRP1/obj/Debug/DVRP1.csproj.FileListAbsolute.txt
+/DVRP1/DVRP1/obj/Debug/DVRP1.csproj.GenerateResource.cache
+/DVRP1/DVRP1/obj/Debug/DVRP1.exe
+/DVRP1/DVRP1/obj/Debug/DVRP1.pdb
+/DVRP1/DVRP1/obj/Release
