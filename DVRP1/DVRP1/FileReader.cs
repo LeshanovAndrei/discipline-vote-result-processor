@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Windows.Forms;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace WindowsFormsApp4
+namespace FileProcessor
 {
     class FileReader
     {
@@ -19,8 +20,23 @@ namespace WindowsFormsApp4
         public FileReader(string filepath)
         {
             this.filepath = filepath;
-            spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
-            workbookPart = spreadsheetDocument.WorkbookPart;
+            try
+            {
+                spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("File is occupied by another process! Close it!", "ERROR");
+                
+
+            }
+            finally
+            {
+                spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
+                workbookPart = spreadsheetDocument.WorkbookPart;
+            }
+            
+            
 
         }
 
@@ -31,7 +47,7 @@ namespace WindowsFormsApp4
               Where(s => s.Name == sheetName).FirstOrDefault();
             if (theSheet == null)
             {
-                throw new ArgumentException("sheetName");
+                throw new ArgumentException(sheetName + " not found");
             }
             WorksheetPart wsPart =
                 (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
