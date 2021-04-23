@@ -106,6 +106,21 @@ namespace FileProcessor
             return value;
         }
 
+        public string NameOfSheet(uint num)
+        {
+            string name = "";
+            uint i = 0;
+            foreach (var item in workbookPart.Workbook.Sheets)
+            {
+                if (i == num)
+                {
+                    return item.LocalName;
+                }
+                i++;
+            }
+            return name;
+        }
+
         public void Close()
         {
             spreadsheetDocument.Close();

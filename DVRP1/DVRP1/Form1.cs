@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+Переделать под настоящий формат функцию нажатия по кнопке "Выбрать файлы выбора"
+поменять имя функции защиты от странного ввода минимальных и максимальных
+ */
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,10 +18,26 @@ namespace DVRP1
 {
     public partial class Form1 : Form
     {
+        private List<Discipline> disciplines;
+        private List<Student> students;
+
+        private int FindStudentInList(Student st)
+        {
+            for (int i = 0; i < students.Count; i++)
+            {
+                if (st.Email == students[i].Email)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         public Form1()
         {
             InitializeComponent();
-            
+            disciplines = new List<Discipline>();
+            students = new List<Student>();
         }
         private string OpenDialog()
         {
@@ -62,6 +83,7 @@ namespace DVRP1
             return res;
         }
 
+        //ПОМЕНЯТЬ ИМЯ!!!
         private uint MinMaxShitHappens(string shitstring)
         {
             if (shitstring == "")
@@ -95,6 +117,7 @@ namespace DVRP1
         private void StartButton_click(object sender, EventArgs e)
         {
             FileReader Dop = new FileReader(OpenDialog());
+            MessageBox.Show(Dop.NameOfSheet(0));
 
             string un_magistr_select = Dop.GetCellValue("B", 4, "Вхід норматив");
             string un_bacalavr_select = Dop.GetCellValue("B", 5, "Вхід норматив");
@@ -105,9 +128,8 @@ namespace DVRP1
             string fac_bacalavr_select = Dop.GetCellValue("B", 9, "Вхід норматив");
             string fac_magistr_condit_select = Dop.GetCellValue("E", 8, "Вхід норматив");
             string fac_bacalavr_condit_select = Dop.GetCellValue("E", 9, "Вхід норматив");
-            List <Discipline> disciplines = new List<Discipline>();
             uint i = 2;
-            while (Dop.GetCellValue("A", i, "Вхід УВК бак+маг") != "" && Dop.GetCellValue("A", i, "Вхід УВК бак+маг") != null)
+            while (Dop.GetCellValue("A", i, "Вхід УВК бак+маг") != null)
             {
                 disciplines.Add(new Discipline(
                     Dop.GetCellValue("A", i, "Вхід УВК бак+маг"),
@@ -123,10 +145,41 @@ namespace DVRP1
 
             Dop.Close();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        //ПЕРЕДЕЛАТЬ ПОД НАСТОЯЩИЙ ФОРМАТ
+        private void button1_Click(object sender, EventArgs e) //
         {
 
+            var opd = new OpenFileDialog();
+            opd.Filter = "*.xlsx | *.xlsx";
+            opd.Multiselect = true;
+            opd.ShowDialog();
+            string[] adresses = opd.FileNames;
+            for (int i = 0; i < adresses.Length; i++)
+            {
+                FileReader reader = new FileReader(adresses[i]);
+                uint c = 2;
+                while(reader.GetCellValue("A", c + 3, "До пункту 2") != null)
+                {
+                    Student st = new Student
+                        (
+                        reader.GetCellValue("A", c, "До пункту 2"),
+                        reader.GetCellValue("B", c, "До пункту 2"),
+                        reader.GetCellValue("C", c, "До пункту 2"),
+                        reader.GetCellValue("D", c, "До пункту 2"),
+                        reader.GetCellValue("E", c, "До пункту 2"),
+                        Convert.ToUInt32(reader.GetCellValue("F", c, "До пункту 2")),
+                        reader.GetCellValue("F", c, "До пункту 2")
+                        );
+                    int tmp = FindStudentInList(st);
+                    if (tmp != -1)
+                    {
+                        students[tmp].AddChoice(st.Codes[0]);
+                    }
+                    else
+                        students.Add(new Student(st));
+                }
+                reader.Close();
+            }
         }
     }
 }
