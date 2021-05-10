@@ -52,7 +52,7 @@ namespace FileProcessor
             WorksheetPart wsPart =
                 (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
             Cell theCell = wsPart.Worksheet.Descendants<Cell>().
-             Where(c => c.CellReference == (columnName+rowIndex.ToString())).FirstOrDefault();
+             Where(c => c.CellReference == (columnName + rowIndex.ToString())).FirstOrDefault();
 
             if (theCell != null)
             {
@@ -110,5 +110,10 @@ namespace FileProcessor
         {
             spreadsheetDocument.Close();
         }
+        public string NameOfSheet(int num)
+        {
+            return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;
+        }
     }
+
 }

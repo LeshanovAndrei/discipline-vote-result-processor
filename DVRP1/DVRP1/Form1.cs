@@ -13,10 +13,17 @@ namespace DVRP1
 {
     public partial class Form1 : Form
     {
+        List<Discipline> disciplines;
+        List<Selection> selections;
+        List<Student> students;
         public Form1()
         {
+
             InitializeComponent();
-            
+            disciplines = new List<Discipline>();
+            selections = new List<Selection>();
+            students = new List<Student>();
+
         }
         private string OpenDialog()
         {
@@ -68,7 +75,7 @@ namespace DVRP1
             {
                 return 0;
             }
-            if (shitstring == "Не обмежена" || shitstring == "Необмежена" || shitstring == "необмежена")
+            if (shitstring == "Не обмежена" || shitstring == "Необмежена" || shitstring == "необмежена" || shitstring == "не обмежена " || shitstring == "не обмежена")
             {
                 return 4294967294;
             }
@@ -96,33 +103,67 @@ namespace DVRP1
         {
             FileReader Dop = new FileReader(OpenDialog());
 
-            string un_magistr_select = Dop.GetCellValue("B", 4, "Вхід норматив");
-            string un_bacalavr_select = Dop.GetCellValue("B", 5, "Вхід норматив");
-            string un_magistr_condit_select = Dop.GetCellValue("E", 4, "Вхід норматив");
-            string un_bacalavr_condit_select = Dop.GetCellValue("E", 5, "Вхід норматив");
+            string un_magistr_select = Dop.GetCellValue("B", 4, Dop.NameOfSheet(0));
+            string un_bacalavr_select = Dop.GetCellValue("B", 5, Dop.NameOfSheet(0));
+            string un_magistr_condit_select = Dop.GetCellValue("E", 4, Dop.NameOfSheet(0));
+            string un_bacalavr_condit_select = Dop.GetCellValue("E", 5, Dop.NameOfSheet(0));
 
-            string fac_magistr_select = Dop.GetCellValue("B", 8, "Вхід норматив");
-            string fac_bacalavr_select = Dop.GetCellValue("B", 9, "Вхід норматив");
-            string fac_magistr_condit_select = Dop.GetCellValue("E", 8, "Вхід норматив");
-            string fac_bacalavr_condit_select = Dop.GetCellValue("E", 9, "Вхід норматив");
-            List <Discipline> disciplines = new List<Discipline>();
+            string fac_magistr_select = Dop.GetCellValue("B", 8, Dop.NameOfSheet(0));
+            string fac_bacalavr_select = Dop.GetCellValue("B", 9, Dop.NameOfSheet(0));
+            string fac_magistr_condit_select = Dop.GetCellValue("E", 8, Dop.NameOfSheet(0));
+            string fac_bacalavr_condit_select = Dop.GetCellValue("E", 9, Dop.NameOfSheet(0));
+
             uint i = 2;
-            while (Dop.GetCellValue("A", i, "Вхід УВК бак+маг") != "" && Dop.GetCellValue("A", i, "Вхід УВК бак+маг") != null)
+            while (Dop.GetCellValue("A", i, Dop.NameOfSheet(1)) != null)
             {
                 disciplines.Add(new Discipline(
-                    Dop.GetCellValue("A", i, "Вхід УВК бак+маг"),
-                    Dop.GetCellValue("B", i, "Вхід УВК бак+маг"),
-                    Dop.GetCellValue("C", i, "Вхід УВК бак+маг"),
-                    Dop.GetCellValue("D", i, "Вхід УВК бак+маг"),
-                    MinMaxShitHappens(Dop.GetCellValue("E", i, "Вхід УВК бак+маг")),
-                    MinMaxShitHappens(Dop.GetCellValue("F", i, "Вхід УВК бак+маг")),
-                    Courses(Dop.GetCellValue("G", i, "Вхід УВК бак+маг"))));
+                    Dop.GetCellValue("A", i, Dop.NameOfSheet(1)),
+                    Dop.GetCellValue("B", i, Dop.NameOfSheet(1)),
+                    Dop.GetCellValue("C", i, Dop.NameOfSheet(1)),
+                    Dop.GetCellValue("D", i, Dop.NameOfSheet(1)),
+                    MinMaxShitHappens(Dop.GetCellValue("E", i, Dop.NameOfSheet(1))),
+                    MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(1))),
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(1)))));
                 i++;
             }
-          
+            while (Dop.GetCellValue("A", i, Dop.NameOfSheet(2)) != null)
+            {
+                disciplines.Add(new Discipline(
+                    Dop.GetCellValue("A", i, Dop.NameOfSheet(2)),
+                    Dop.GetCellValue("E", i, Dop.NameOfSheet(2)),
+                    Dop.GetCellValue("C", i, Dop.NameOfSheet(2)),
+                    Dop.GetCellValue("D", i, Dop.NameOfSheet(2)),
+                    MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
+                    0,
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2)))));
+               
+                i++;
+            }
+            while (Dop.GetCellValue("A", i, Dop.NameOfSheet(3)) != null)
+            {
+                disciplines.Add(new Discipline(
+                    Dop.GetCellValue("A", i, Dop.NameOfSheet(3)),
+                    Dop.GetCellValue("E", i, Dop.NameOfSheet(3)),
+                    Dop.GetCellValue("C", i, Dop.NameOfSheet(3)),
+                    Dop.GetCellValue("D", i, Dop.NameOfSheet(3)),
+                    MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
+                    0,
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3)))));
+                
+                i++;
+            }
+
+
 
             Dop.Close();
-        }
+            foreach ( Discipline elem in disciplines)
+            {
+                selections.Add(new Selection(elem));
+               
+            }
+            ;
+        } 
+        
 
         private void button1_Click(object sender, EventArgs e)
         {

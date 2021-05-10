@@ -7,3 +7,8 @@ C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-process
 C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.csproj.CoreCompileInputs.cache
 C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.exe
 C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.pdb
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\WindowsBase.dll
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\bin\Debug\DocumentFormat.OpenXml.xml
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.Form1.resources
+C:\Users\30m20\OneDrive\Документы\GitHub\discipline-vote-result-processor\DVRP1\DVRP1\obj\Debug\DVRP1.csproj.CopyComplete
