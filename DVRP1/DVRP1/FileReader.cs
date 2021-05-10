@@ -27,7 +27,7 @@ namespace FileProcessor
             catch (Exception)
             {
                 MessageBox.Show("File is occupied by another process! Close it!", "ERROR");
-                
+
 
             }
             finally
@@ -35,8 +35,8 @@ namespace FileProcessor
                 spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
                 workbookPart = spreadsheetDocument.WorkbookPart;
             }
-            
-            
+
+
 
         }
 
@@ -52,7 +52,7 @@ namespace FileProcessor
             WorksheetPart wsPart =
                 (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
             Cell theCell = wsPart.Worksheet.Descendants<Cell>().
-             Where(c => c.CellReference == (columnName+rowIndex.ToString())).FirstOrDefault();
+             Where(c => c.CellReference == (columnName + rowIndex.ToString())).FirstOrDefault();
 
             if (theCell != null)
             {
@@ -106,24 +106,27 @@ namespace FileProcessor
             return value;
         }
 
-        public string NameOfSheet(uint num)
+        public string NameOfSheet(int num)
         {
-            string name = "";
-            uint i = 0;
-            foreach (var item in workbookPart.Workbook.Sheets)
-            {
-                if (i == num)
-                {
-                    return item.LocalName;
-                }
-                i++;
-            }
-            return name;
+            return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;
         }
 
         public void Close()
         {
             spreadsheetDocument.Close();
+        }
+        public string FacultyFromFileName()
+        {
+            return filepath;
+        }
+        public int LetterToInt(string letter)
+        {
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(letter);
+            return asciiBytes[0] - 64;
+        }
+        public string IntToLetter(int intValue)
+        {
+            return ((char)(intValue + 64)).ToString();
         }
     }
 }
