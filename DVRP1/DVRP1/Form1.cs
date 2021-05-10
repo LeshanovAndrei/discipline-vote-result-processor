@@ -168,9 +168,6 @@ namespace DVRP1
                 
                 i++;
             }
-
-
-
             Dop.Close();
             foreach ( Discipline elem in disciplines)
             {
@@ -178,11 +175,23 @@ namespace DVRP1
                
             }
             ;
-        } 
-        
+        }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private void button1_Click(object sender, EventArgs e) //
         {
+
+            var opd = new OpenFileDialog();
+            opd.Filter = "*.xlsx | *.xlsx";
+            opd.Multiselect = true;
+            opd.ShowDialog();
+            string[] adresses = opd.FileNames;
+            for (int i = 0; i < adresses.Length; i++)
+            {
+                FileReader reader = new FileReader(adresses[i]);
+                uint c = 2;
+                for (int listCounter = 0; listCounter < 2; listCounter++)
+                {
 
 
                     while (reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != null && reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != "")
