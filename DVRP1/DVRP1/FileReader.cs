@@ -129,4 +129,5 @@ namespace FileProcessor
             return ((char)(intValue + 64)).ToString();
         }
     }
+
 }
