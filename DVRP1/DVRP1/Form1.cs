@@ -13,9 +13,25 @@ namespace DVRP1
 {
     public partial class Form1 : Form
     {
-        List<Discipline> disciplines;
-        List<Selection> selections;
-        List<Student> students;
+        private List<Discipline> disciplines;
+        private List<Student> students;
+        private List<Selection> selections;
+
+        private int FindStudentInList(Student st)
+        {
+            for (int i = 0; i < students.Count; i++)
+            {
+                if (st.Name == students[i].Name)
+                {
+                    if (st.Group == students[i].Group)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
         public Form1()
         {
 
@@ -23,7 +39,6 @@ namespace DVRP1
             disciplines = new List<Discipline>();
             selections = new List<Selection>();
             students = new List<Student>();
-
         }
         private string OpenDialog()
         {
@@ -35,25 +50,25 @@ namespace DVRP1
 
         private uint[] Courses(string c)
         {
-            
+
             int j = 0;
             uint[] a = new uint[6];
             if (c == "" || c == null)
             {
-                return new uint[1] { 0};
+                return new uint[1] { 0 };
             }
             for (int i = 0; i < c.Length; i++)
             {
                 if (c[i] > 47 && c[i] < 58)
                 {
-                    a[j] = Convert.ToUInt32(c[i])-48;
+                    a[j] = Convert.ToUInt32(c[i]) - 48;
                     j++;
                 }
                 if (c[i] == '-')
                 {
-                    uint x = a[j-1];
+                    uint x = a[j - 1];
                     x++;
-                    while (x != Convert.ToUInt32(c[i+1])-48)
+                    while (x != Convert.ToUInt32(c[i + 1]) - 48)
                     {
                         a[j] = x;
                         x++;
@@ -99,7 +114,7 @@ namespace DVRP1
             return Uint;
         }
 
-        private void StartButton_click(object sender, EventArgs e)
+        private void OpenDisciplinesFiles_button(object sender, EventArgs e)
         {
             FileReader Dop = new FileReader(OpenDialog());
 
@@ -136,7 +151,7 @@ namespace DVRP1
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
                     0,
                     Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2)))));
-               
+
                 i++;
             }
             while (Dop.GetCellValue("A", i, Dop.NameOfSheet(3)) != null)
@@ -149,23 +164,106 @@ namespace DVRP1
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
                     0,
                     Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3)))));
-                
+
                 i++;
             }
-
-
-
             Dop.Close();
-            foreach ( Discipline elem in disciplines)
+            foreach (Discipline elem in disciplines)
             {
                 selections.Add(new Selection(elem));
-               
-            }
-            ;
-        } 
-        
 
-        private void button1_Click(object sender, EventArgs e)
+            }
+            button1.Enabled = true;
+        }
+
+
+        private void OpenStudentFiles_button(object sender, EventArgs e) //
+        {
+            var opd = new OpenFileDialog();
+            opd.Filter = "*.xlsx | *.xlsx";
+            opd.Multiselect = true;
+            opd.ShowDialog();
+            string[] adresses = opd.FileNames;
+            for (int i = 0; i < adresses.Length; i++)
+            {
+                FileReader reader = new FileReader(adresses[i]);
+                uint c = 2;
+                for (int listCounter = 0; listCounter < 2; listCounter++)
+                {
+
+
+                    while (reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != null && reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != "")
+                    {
+                        Student st = new Student
+                            (
+                            reader.FacultyFromFileName(),//faculty
+                            reader.GetCellValue("D", c, reader.NameOfSheet(listCounter)),//email
+                            reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)),//name
+                            reader.GetCellValue("G", c, reader.NameOfSheet(listCounter)),//group
+                            Convert.ToUInt32(reader.GetCellValue("F", c, reader.NameOfSheet(listCounter)))//NumOfSelections
+                            );
+                        for (int j = reader.LetterToInt("H"); j < st.NumberOfSelections + reader.LetterToInt("H"); j++)
+                        {
+                            st.AddChoice(reader.GetCellValue(reader.IntToLetter(j), c, reader.NameOfSheet(listCounter)));
+                        }
+                        c++;
+                        int pos = FindStudentInList(st);
+                        if (pos != -1)
+                        {
+                            students[pos].AddChoice(st.Codes);
+                        }
+                        else
+                        {
+                            students.Add(st);
+                        }
+                    }
+                }
+                reader.Close();
+            }
+
+            ComputeStudentsSelections();
+            button2.Enabled = true;
+        }
+
+        private void ComputeStudentsSelections()
+        {
+            foreach (var student in students)
+            {
+                for (int i = 0; i < student.NumberOfSelections; i++)
+                {
+                    if (selections.Exists(x => x.Discipline.Code == student.Codes[i]))
+                    {
+                        selections.Find(x => x.Discipline.Code == student.Codes[i]).AddStudent(student);
+
+                    }
+                    else
+                    if (checkBox1.Checked)
+                        MessageBox.Show("Student " + student.Name + " choose wrong discipline!");
+
+                }
+            }
+        }
+
+        private void CreatePutput(object sender, EventArgs e)
+        {
+            //var fbd = new FolderBrowserDialog();
+            //DialogResult result = fbd.ShowDialog();
+            FileWriter writer = new FileWriter("output.xlsx");
+            writer.InsertWorksheet("0");
+            uint currentCellNumber = 1;
+            for (uint i = 0; i < selections.Count; i++)
+            {
+                writer.SetCellValue("A", currentCellNumber++, selections[(int)i].Discipline.Name, "0");
+                for (uint j = 0; j < selections[(int)i].Students.Count; j++)
+                {
+                    writer.SetCellValue("B", currentCellNumber++, selections[(int)i].Students[(int)j].Name, "0");
+                }
+            }
+            MessageBox.Show("Done!");
+            writer.Close();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
         }

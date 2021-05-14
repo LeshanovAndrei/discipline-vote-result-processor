@@ -27,7 +27,7 @@ namespace FileProcessor
             catch (Exception)
             {
                 MessageBox.Show("File is occupied by another process! Close it!", "ERROR");
-                
+
 
             }
             finally
@@ -35,8 +35,8 @@ namespace FileProcessor
                 spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
                 workbookPart = spreadsheetDocument.WorkbookPart;
             }
-            
-            
+
+
 
         }
 
@@ -106,13 +106,27 @@ namespace FileProcessor
             return value;
         }
 
+        public string NameOfSheet(int num)
+        {
+            return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;
+        }
+
         public void Close()
         {
             spreadsheetDocument.Close();
         }
-        public string NameOfSheet(int num)
+        public string FacultyFromFileName()
         {
-            return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;
+            return filepath;
+        }
+        public int LetterToInt(string letter)
+        {
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(letter);
+            return asciiBytes[0] - 64;
+        }
+        public string IntToLetter(int intValue)
+        {
+            return ((char)(intValue + 64)).ToString();
         }
     }
 
