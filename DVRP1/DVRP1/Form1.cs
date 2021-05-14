@@ -115,7 +115,7 @@ namespace DVRP1
             return Uint;
         }
 
-        private void StartButton_click(object sender, EventArgs e)
+        private void OpenDisciplinesFiles_button(object sender, EventArgs e)
         {
             FileReader Dop = new FileReader(OpenDialog());
 
@@ -174,13 +174,16 @@ namespace DVRP1
                 selections.Add(new Selection(elem));
                
             }
-            ;
         }
 
 
-        private void button1_Click(object sender, EventArgs e) //
+        private void OpenStudentFiles_button(object sender, EventArgs e) //
         {
-
+            if (disciplines.Count == 0)
+            {
+                MessageBox.Show("First select the discipline file!");
+                return;
+            }
             var opd = new OpenFileDialog();
             opd.Filter = "*.xlsx | *.xlsx";
             opd.Multiselect = true;
@@ -222,7 +225,26 @@ namespace DVRP1
                 }
                 reader.Close();
             }
-            ;
+
+            ComputeStudentsSelections();
+        }
+
+        private void ComputeStudentsSelections()
+        {
+            foreach (var student in students)
+            {
+                for (int i = 0; i < student.NumberOfSelections; i++)
+                {
+                        if (selections.Exists(x => x.Discipline.Code == student.Codes[i]))
+                        {
+                            selections.Find(x => x.Discipline.Code == student.Codes[i]).AddStudent(student);
+
+                        }
+                        else
+                        MessageBox.Show("Student " + student.Name + " choose wrong discipline!");
+
+                }
+            }
         }
     }
 }

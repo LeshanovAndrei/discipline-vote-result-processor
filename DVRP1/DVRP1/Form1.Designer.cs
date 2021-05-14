@@ -42,7 +42,7 @@ namespace DVRP1
             this.StartButton.TabIndex = 0;
             this.StartButton.Text = "Обрати файл вхідних даних";
             this.StartButton.UseVisualStyleBackColor = true;
-            this.StartButton.Click += new System.EventHandler(this.StartButton_click);
+            this.StartButton.Click += new System.EventHandler(this.OpenDisciplinesFiles_button);
             // 
             // button1
             // 
@@ -52,7 +52,7 @@ namespace DVRP1
             this.button1.TabIndex = 1;
             this.button1.Text = "Обрати файли факультетів";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.OpenStudentFiles_button);
             // 
             // textBox1
             // 
