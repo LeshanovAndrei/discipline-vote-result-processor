@@ -14,10 +14,23 @@ namespace DVRP1
     public partial class Form1 : Form
     {
         private List<Discipline> disciplines;
-        private List<Student> students;
-        private List<Selection> selections;
+        private List<Student> students1;
+        private List<Student> students2;
+        private List<Selection> selections1;
+        private List<Selection> selections2;
 
-        private int FindStudentInList(Student st)
+        string un_magistr_select;
+        string un_bacalavr_select;
+        string un_magistr_condit_select;
+        string un_bacalavr_condit_select;
+
+        string fac_magistr_select;
+        string fac_bacalavr_select;
+        string fac_magistr_condit_select;
+        string fac_bacalavr_condit_select;
+
+
+        private int FindStudentInList(Student st, List<Student> students)
         {
             for (int i = 0; i < students.Count; i++)
             {
@@ -37,8 +50,10 @@ namespace DVRP1
 
             InitializeComponent();
             disciplines = new List<Discipline>();
-            selections = new List<Selection>();
-            students = new List<Student>();
+            selections1 = new List<Selection>();
+            selections2 = new List<Selection>();
+            students1 = new List<Student>();
+            students2 = new List<Student>();
         }
         private string OpenDialog()
         {
@@ -118,15 +133,15 @@ namespace DVRP1
         {
             FileReader Dop = new FileReader(OpenDialog());
 
-            string un_magistr_select = Dop.GetCellValue("B", 4, Dop.NameOfSheet(0));
-            string un_bacalavr_select = Dop.GetCellValue("B", 5, Dop.NameOfSheet(0));
-            string un_magistr_condit_select = Dop.GetCellValue("E", 4, Dop.NameOfSheet(0));
-            string un_bacalavr_condit_select = Dop.GetCellValue("E", 5, Dop.NameOfSheet(0));
+            un_magistr_select = Dop.GetCellValue("B", 4, Dop.NameOfSheet(0));
+            un_bacalavr_select = Dop.GetCellValue("B", 5, Dop.NameOfSheet(0));
+            un_magistr_condit_select = Dop.GetCellValue("E", 4, Dop.NameOfSheet(0));
+            un_bacalavr_condit_select = Dop.GetCellValue("E", 5, Dop.NameOfSheet(0));
 
-            string fac_magistr_select = Dop.GetCellValue("B", 8, Dop.NameOfSheet(0));
-            string fac_bacalavr_select = Dop.GetCellValue("B", 9, Dop.NameOfSheet(0));
-            string fac_magistr_condit_select = Dop.GetCellValue("E", 8, Dop.NameOfSheet(0));
-            string fac_bacalavr_condit_select = Dop.GetCellValue("E", 9, Dop.NameOfSheet(0));
+            fac_magistr_select = Dop.GetCellValue("B", 8, Dop.NameOfSheet(0));
+            fac_bacalavr_select = Dop.GetCellValue("B", 9, Dop.NameOfSheet(0));
+            fac_magistr_condit_select = Dop.GetCellValue("E", 8, Dop.NameOfSheet(0));
+            fac_bacalavr_condit_select = Dop.GetCellValue("E", 9, Dop.NameOfSheet(0));
 
             uint i = 2;
             while (Dop.GetCellValue("A", i, Dop.NameOfSheet(1)) != null)
@@ -138,7 +153,7 @@ namespace DVRP1
                     Dop.GetCellValue("D", i, Dop.NameOfSheet(1)),
                     MinMaxShitHappens(Dop.GetCellValue("E", i, Dop.NameOfSheet(1))),
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(1))),
-                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(1)))));
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(1))), 0));
                 i++;
             }
             while (Dop.GetCellValue("A", i, Dop.NameOfSheet(2)) != null)
@@ -150,7 +165,7 @@ namespace DVRP1
                     Dop.GetCellValue("D", i, Dop.NameOfSheet(2)),
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
                     0,
-                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2)))));
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2))), 1));
 
                 i++;
             }
@@ -163,16 +178,11 @@ namespace DVRP1
                     Dop.GetCellValue("D", i, Dop.NameOfSheet(3)),
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
                     0,
-                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3)))));
+                    Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3))), 1));
 
                 i++;
             }
             Dop.Close();
-            foreach (Discipline elem in disciplines)
-            {
-                selections.Add(new Selection(elem));
-
-            }
             button1.Enabled = true;
         }
 
@@ -187,45 +197,70 @@ namespace DVRP1
             for (int i = 0; i < adresses.Length; i++)
             {
                 FileReader reader = new FileReader(adresses[i]);
-                uint c = 2;
-                for (int listCounter = 0; listCounter < 2; listCounter++)
+                uint currentRow = 2;
+                while (reader.GetCellValue("E", currentRow, reader.NameOfSheet(0)) != null && reader.GetCellValue("E", currentRow, reader.NameOfSheet(0)) != "")
                 {
-
-
-                    while (reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != null && reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)) != "")
+                    Student st = new Student
+                        (
+                        reader.FacultyFromFileName(),//faculty
+                        reader.GetCellValue("D", currentRow, reader.NameOfSheet(0)),//email
+                        reader.GetCellValue("E", currentRow, reader.NameOfSheet(0)),//name
+                        reader.GetCellValue("G", currentRow, reader.NameOfSheet(0)),//group
+                        Convert.ToUInt32(reader.GetCellValue("F", currentRow, reader.NameOfSheet(0)))//NumOfSelections
+                        );
+                    for (int j = reader.LetterToInt("H"); j < st.NumberOfSelections + reader.LetterToInt("H"); j++)
                     {
-                        Student st = new Student
-                            (
-                            reader.FacultyFromFileName(),//faculty
-                            reader.GetCellValue("D", c, reader.NameOfSheet(listCounter)),//email
-                            reader.GetCellValue("E", c, reader.NameOfSheet(listCounter)),//name
-                            reader.GetCellValue("G", c, reader.NameOfSheet(listCounter)),//group
-                            Convert.ToUInt32(reader.GetCellValue("F", c, reader.NameOfSheet(listCounter)))//NumOfSelections
-                            );
-                        for (int j = reader.LetterToInt("H"); j < st.NumberOfSelections + reader.LetterToInt("H"); j++)
-                        {
-                            st.AddChoice(reader.GetCellValue(reader.IntToLetter(j), c, reader.NameOfSheet(listCounter)));
-                        }
-                        c++;
-                        int pos = FindStudentInList(st);
-                        if (pos != -1)
-                        {
-                            students[pos].AddChoice(st.Codes);
-                        }
-                        else
-                        {
-                            students.Add(st);
-                        }
+                        st.AddChoice(reader.GetCellValue(reader.IntToLetter(j), currentRow, reader.NameOfSheet(0)));
+                    }
+                    currentRow++;
+                    int pos = FindStudentInList(st, students1);
+                    if (pos != -1)
+                    {
+                        students1[pos].AddChoice(st.Codes);
+                    }
+                    else
+                    {
+                        students1.Add(st);
                     }
                 }
+
+                currentRow = 2;
+                while (reader.GetCellValue("E", currentRow, reader.NameOfSheet(1)) != null && reader.GetCellValue("E", currentRow, reader.NameOfSheet(1)) != "")
+                {
+                    Student st = new Student
+                        (
+                        reader.FacultyFromFileName(),//faculty
+                        reader.GetCellValue("D", currentRow, reader.NameOfSheet(1)),//email
+                        reader.GetCellValue("E", currentRow, reader.NameOfSheet(1)),//name
+                        reader.GetCellValue("G", currentRow, reader.NameOfSheet(1)),//group
+                        Convert.ToUInt32(reader.GetCellValue("F", currentRow, reader.NameOfSheet(1)))//NumOfSelections
+                        );
+                    for (int j = reader.LetterToInt("H"); j < st.NumberOfSelections + reader.LetterToInt("H"); j++)
+                    {
+                        st.AddChoice(reader.GetCellValue(reader.IntToLetter(j), currentRow, reader.NameOfSheet(1)));
+                    }
+                    currentRow++;
+                    int pos = FindStudentInList(st, students2);
+                    if (pos != -1)
+                    {
+                        students2[pos].AddChoice(st.Codes);
+                    }
+                    else
+                    {
+                        students2.Add(st);
+                    }
+                }
+
+
                 reader.Close();
             }
 
-            ComputeStudentsSelections();
+            ComputeStudentsSelections(students1, selections1);
+            ComputeStudentsSelections(students2, selections2);
             button2.Enabled = true;
         }
 
-        private void ComputeStudentsSelections()
+        private void ComputeStudentsSelections(List<Student> students, List<Selection> selections)
         {
             foreach (var student in students)
             {
@@ -237,27 +272,46 @@ namespace DVRP1
 
                     }
                     else
+                    if (disciplines.Exists(x => x.Code == student.Codes[i]))
+                    {
+                        selections.Add(new Selection(disciplines.Find(x => x.Code == student.Codes[i])));
+                        selections.Find(x => x.Discipline.Code == student.Codes[i]).AddStudent(student);
+                    }
+                    else
                     if (checkBox1.Checked)
                         MessageBox.Show("Student " + student.Name + " choose wrong discipline!");
 
                 }
             }
+            ;
         }
 
-        private void CreatePutput(object sender, EventArgs e)
+        private void CreateOutput(object sender, EventArgs e)
         {
-            //var fbd = new FolderBrowserDialog();
-            //DialogResult result = fbd.ShowDialog();
-            FileWriter writer = new FileWriter("output.xlsx");
-            writer.InsertWorksheet("0");
+            var fbd = new FolderBrowserDialog();
+            fbd.ShowDialog();
+            CreateOutputFile(selections1, fbd.SelectedPath + "/output1.xlsx");
+            CreateOutputFile(selections2, fbd.SelectedPath + "/output2.xlsx");
+        }
+
+        private void CreateOutputFile(List<Selection> selections, string filename)
+        {
+            FileWriter writer = new FileWriter(filename);
+            writer.InsertWorksheet("Студенты");//ТУТ БУДУТ ВСЯКИЕ ДРУГИЕ ЛИСТЫ
             uint currentCellNumber = 1;
             for (uint i = 0; i < selections.Count; i++)
             {
-                writer.SetCellValue("A", currentCellNumber++, selections[(int)i].Discipline.Name, "0");
+                writer.SetCellValue("A", currentCellNumber++, selections[(int)i].Discipline.Name, "Студенты");
                 for (uint j = 0; j < selections[(int)i].Students.Count; j++)
                 {
-                    writer.SetCellValue("B", currentCellNumber++, selections[(int)i].Students[(int)j].Name, "0");
+                    writer.SetCellValue("B", currentCellNumber++, selections[(int)i].Students[(int)j].Name, "Студенты");
                 }
+            }
+            writer.InsertWorksheet("Количества");
+            for (uint i = 0; i < selections.Count; i++)
+            {
+                writer.SetCellValue("A", i+1, selections[(int)i].Discipline.Name, "Количества");
+                writer.SetCellValue("B", i+1, selections[(int)i].Students.Count.ToString(), "Количества");
             }
             MessageBox.Show("Done!");
             writer.Close();
@@ -265,6 +319,17 @@ namespace DVRP1
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Percentchange(string percentstring)
+        {
+            double percent = Convert.ToDouble(percentstring.Trim(new char[] { '>', '=', '%' })) / 100;
 
         }
     }

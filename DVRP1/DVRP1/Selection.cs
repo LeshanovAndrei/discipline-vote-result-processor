@@ -22,10 +22,23 @@ namespace DVRP1
             numbers++;
             //Какая-нибудь проверка статуса
         }
+
+        public void StatusCheck()
+        {
+            if(magistr)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
         private Discipline discipline;
         private List<Student> students;
         private uint numbers;
         private uint status;
+        private bool magistr;
         public Discipline Discipline
         {
             get
@@ -63,5 +76,6 @@ namespace DVRP1
         }
 
         internal List<Student> Students { get => students; set => students = value; }
+        public bool Magistr { get => magistr; set => magistr = value; }
     }
 }

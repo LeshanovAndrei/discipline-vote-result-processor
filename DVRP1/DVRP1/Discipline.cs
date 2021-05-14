@@ -9,7 +9,7 @@ namespace DVRP1
 {
     class Discipline
     {
-        public Discipline(string faculty, string cathedra, string code, string name, uint max, uint min, uint[] courses)
+        public Discipline(string faculty, string cathedra, string code, string name, uint max, uint min, uint[] courses, int level)
         {
             this.faculty = faculty;
             this.cathedra = cathedra;
@@ -18,6 +18,7 @@ namespace DVRP1
             this.max = max;
             this.min = min;
             this.courses = courses;
+            this.level = level;
             
         }
         ~Discipline()
@@ -108,6 +109,12 @@ namespace DVRP1
                 courses = value;
             }
         }
+
+        private int level;
+        public int Level { get => level; set => level = value; }
+
+        
+
 
     }
 }
