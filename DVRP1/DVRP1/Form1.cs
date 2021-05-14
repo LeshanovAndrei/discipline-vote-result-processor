@@ -39,7 +39,6 @@ namespace DVRP1
             disciplines = new List<Discipline>();
             selections = new List<Selection>();
             students = new List<Student>();
-
         }
         private string OpenDialog()
         {
@@ -152,7 +151,7 @@ namespace DVRP1
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
                     0,
                     Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2)))));
-               
+
                 i++;
             }
             while (Dop.GetCellValue("A", i, Dop.NameOfSheet(3)) != null)
@@ -165,25 +164,21 @@ namespace DVRP1
                     MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
                     0,
                     Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3)))));
-                
+
                 i++;
             }
             Dop.Close();
-            foreach ( Discipline elem in disciplines)
+            foreach (Discipline elem in disciplines)
             {
                 selections.Add(new Selection(elem));
-               
+
             }
+            button1.Enabled = true;
         }
 
 
         private void OpenStudentFiles_button(object sender, EventArgs e) //
         {
-            if (disciplines.Count == 0)
-            {
-                MessageBox.Show("First select the discipline file!");
-                return;
-            }
             var opd = new OpenFileDialog();
             opd.Filter = "*.xlsx | *.xlsx";
             opd.Multiselect = true;
@@ -227,6 +222,7 @@ namespace DVRP1
             }
 
             ComputeStudentsSelections();
+            button2.Enabled = true;
         }
 
         private void ComputeStudentsSelections()
@@ -235,16 +231,41 @@ namespace DVRP1
             {
                 for (int i = 0; i < student.NumberOfSelections; i++)
                 {
-                        if (selections.Exists(x => x.Discipline.Code == student.Codes[i]))
-                        {
-                            selections.Find(x => x.Discipline.Code == student.Codes[i]).AddStudent(student);
+                    if (selections.Exists(x => x.Discipline.Code == student.Codes[i]))
+                    {
+                        selections.Find(x => x.Discipline.Code == student.Codes[i]).AddStudent(student);
 
-                        }
-                        else
+                    }
+                    else
+                    if (checkBox1.Checked)
                         MessageBox.Show("Student " + student.Name + " choose wrong discipline!");
 
                 }
             }
+        }
+
+        private void CreatePutput(object sender, EventArgs e)
+        {
+            //var fbd = new FolderBrowserDialog();
+            //DialogResult result = fbd.ShowDialog();
+            FileWriter writer = new FileWriter("output.xlsx");
+            writer.InsertWorksheet("0");
+            uint currentCellNumber = 1;
+            for (uint i = 0; i < selections.Count; i++)
+            {
+                writer.SetCellValue("A", currentCellNumber++, selections[(int)i].Discipline.Name, "0");
+                for (uint j = 0; j < selections[(int)i].Students.Count; j++)
+                {
+                    writer.SetCellValue("B", currentCellNumber++, selections[(int)i].Students[(int)j].Name, "0");
+                }
+            }
+            MessageBox.Show("Done!");
+            writer.Close();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

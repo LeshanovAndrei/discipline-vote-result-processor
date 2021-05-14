@@ -11,14 +11,14 @@ namespace DVRP1
         public Selection(Discipline discipline)
         {
             this.discipline = discipline;
-            this.students = new List<Student>();
+            this.Students = new List<Student>();
             this.numbers = 0;
             this.status = 0;
 
         }
         public void AddStudent(Student st)
         {
-            students.Add(st);
+            Students.Add(st);
             numbers++;
             //Какая-нибудь проверка статуса
         }
@@ -61,5 +61,7 @@ namespace DVRP1
                 status = value;
             }
         }
+
+        internal List<Student> Students { get => students; set => students = value; }
     }
 }
