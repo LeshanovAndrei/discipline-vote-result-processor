@@ -246,9 +246,9 @@ namespace DVRP1
 
         private void CreatePutput(object sender, EventArgs e)
         {
-            //var fbd = new FolderBrowserDialog();
-            //DialogResult result = fbd.ShowDialog();
-            FileWriter writer = new FileWriter("output.xlsx");
+            var fbd = new FolderBrowserDialog();
+            DialogResult result = fbd.ShowDialog();
+            FileWriter writer = new FileWriter(fbd.SelectedPath + "/output.xlsx");
             writer.InsertWorksheet("0");
             uint currentCellNumber = 1;
             for (uint i = 0; i < selections.Count; i++)
@@ -266,6 +266,12 @@ namespace DVRP1
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void Percentchange(string percentstring)
+        {
+            double percent = Convert.ToDouble(percentstring.Trim(new char[] { '>','=','%'}))/100;
+            
         }
     }
 }
