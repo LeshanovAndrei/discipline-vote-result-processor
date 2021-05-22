@@ -283,7 +283,6 @@ namespace DVRP1
 
                 }
             }
-            ;
         }
 
         private void CreateOutput(object sender, EventArgs e)

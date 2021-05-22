@@ -19,7 +19,6 @@ namespace DVRP1
             this.min = min;
             this.courses = courses;
             this.level = level;
-            
         }
         ~Discipline()
         {
