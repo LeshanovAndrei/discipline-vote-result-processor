@@ -18,6 +18,9 @@ namespace DVRP1
         private List<Student> students2;
         private List<Selection> selections1;
         private List<Selection> selections2;
+        private Logger loger;
+   
+       
 
         string un_magistr_select;
         string un_bacalavr_select;
@@ -54,6 +57,8 @@ namespace DVRP1
             selections2 = new List<Selection>();
             students1 = new List<Student>();
             students2 = new List<Student>();
+            loger = new Logger("C:\\Users\\30m20\\OneDrive\\Документы\\GitHub\\discipline-vote-result-processor\\DVRP1\\DVRP1\\bin\\Debug\\Log.txt");
+            
         }
         private string OpenDialog()
         {
@@ -279,7 +284,10 @@ namespace DVRP1
                     }
                     else
                     if (checkBox1.Checked)
-                        MessageBox.Show("Student " + student.Name + " choose wrong discipline!");
+                    {
+                      
+                        loger.Log("Student " + student.Name +" choose wrong discipline: "+ student.Codes[i] );
+                    }
 
                 }
             }
@@ -331,5 +339,7 @@ namespace DVRP1
             double percent = Convert.ToDouble(percentstring.Trim(new char[] { '>', '=', '%' })) / 100;
 
         }
+
+        
     }
 }
