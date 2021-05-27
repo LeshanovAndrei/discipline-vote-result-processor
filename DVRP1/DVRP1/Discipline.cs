@@ -9,7 +9,7 @@ namespace DVRP1
 {
     class Discipline
     {
-        public Discipline(string faculty, string cathedra, string code, string name, uint max, uint min, uint[] courses, int level)
+        public Discipline(string faculty, string cathedra, string code, string name, uint max, uint min, uint[] courses, int forChoose, int forConditChoose)
         {
             this.faculty = faculty;
             this.cathedra = cathedra;
@@ -18,12 +18,15 @@ namespace DVRP1
             this.max = max;
             this.min = min;
             this.courses = courses;
-            this.level = level;
+            this.forChoose = forChoose;
+            this.forConditChoose = forConditChoose;
         }
         ~Discipline()
         {
             
         }
+        private int forChoose;
+        private int forConditChoose;
         private string faculty;
         public string Faculty
         {
@@ -109,11 +112,7 @@ namespace DVRP1
             }
         }
 
-        private int level;
-        public int Level { get => level; set => level = value; }
-
-        
-
-
+        public int ForChoose { get => forChoose; set => forChoose = value; }
+        public int ForConditChoose { get => forConditChoose; set => forConditChoose = value; }
     }
 }

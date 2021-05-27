@@ -11,32 +11,24 @@ namespace DVRP1
         public Selection(Discipline discipline)
         {
             this.discipline = discipline;
-            this.Students = new List<Student>();
-            this.numbers = 0;
-            this.status = 0;
+            Students = new List<Student>();
+            status = 0;
 
         }
         public void AddStudent(Student st)
         {
             Students.Add(st);
-            numbers++;
-            //Какая-нибудь проверка статуса
         }
 
         public void StatusCheck()
         {
-            if(magistr)
-            {
-
-            }
-            else
-            {
-
-            }
+            if (students.Count > discipline.ForConditChoose)
+                status = 1;
+            if (students.Count > discipline.ForChoose)
+                status = 2;
         }
         private Discipline discipline;
         private List<Student> students;
-        private uint numbers;
         private uint status;
         private bool magistr;
         public Discipline Discipline
@@ -50,19 +42,8 @@ namespace DVRP1
                 discipline = value;
             }
         }
-        
-        public uint Numbers
-        {
-            get
-            {
-                return numbers;
-            }
-            set
-            {
-                numbers = value;
-            }
-        }
-        
+
+
         public uint Status
         {
             get

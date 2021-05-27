@@ -111,6 +111,11 @@ namespace FileProcessor
             return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;
         }
 
+        public int SheetNumber()
+        {
+            return workbookPart.Workbook.Descendants<Sheet>().ToList().Count;
+        }
+
         public void Close()
         {
             spreadsheetDocument.Close();
