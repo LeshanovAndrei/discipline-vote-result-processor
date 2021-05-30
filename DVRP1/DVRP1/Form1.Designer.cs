@@ -33,6 +33,8 @@ namespace DVRP1
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.progressBarLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // StartButton
@@ -78,11 +80,27 @@ namespace DVRP1
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(13, 187);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(220, 23);
+            this.progressBar1.TabIndex = 4;            // 
+            // progressBarLabel
+            // 
+            this.progressBarLabel.AutoSize = true;
+            this.progressBarLabel.Location = new System.Drawing.Point(13, 164);
+            this.progressBarLabel.Name = "progressBarLabel";
+            this.progressBarLabel.Size = new System.Drawing.Size(0, 17);
+            this.progressBarLabel.TabIndex = 5;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(255, 222);
+            this.Controls.Add(this.progressBarLabel);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -100,6 +118,8 @@ namespace DVRP1
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label progressBarLabel;
     }
 }
 
