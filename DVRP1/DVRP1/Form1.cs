@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 using FileProcessor;
 
 namespace DVRP1
 {
-
-
     public partial class Form1 : Form
     {
         private List<Discipline> disciplines;
@@ -153,7 +147,12 @@ namespace DVRP1
         {
             try
             {
-                FileReader Dop = new FileReader(OpenDialog());
+                var path = OpenDialog();
+                if (path.Length < 1)
+                {
+                    return;
+                }
+                FileReader Dop = new FileReader(path);
                 progressBarLabel.Text = "Обробляється";
 
 
@@ -226,6 +225,7 @@ namespace DVRP1
 
         private void OpenStudentFiles_button(object sender, EventArgs e) //
         {
+            Stopwatch stopwatch = new Stopwatch();
             try
             {
                 progressBarLabel.Text = "Обробляється";
@@ -233,6 +233,7 @@ namespace DVRP1
                 opd.Filter = "*.xlsx | *.xlsx";
                 opd.Multiselect = true;
                 opd.ShowDialog();
+                stopwatch.Start();
                 string[] adresses = opd.FileNames;
                 progressBar1.Value = 0;
                 progressBar1.Maximum = adresses.Length;
@@ -306,13 +307,14 @@ namespace DVRP1
 
                 button2.Enabled = true;
                 progressBarLabel.Text = "Готово";
+                stopwatch.Stop();
+                MessageBox.Show(stopwatch.ElapsedMilliseconds.ToString());
             }
             catch (Exception)
             {
                 MessageBox.Show("Something went wrong while reading the file! Try again.", "Error!");
                 return;
             }
-
         }
 
         private void ComputeStudentsSelections(List<Student> students, List<Selection> selections)
@@ -357,16 +359,26 @@ namespace DVRP1
 
         private void CreateOutput(object sender, EventArgs e)
         {
+            Stopwatch stopwatch = new Stopwatch();
+            
             progressBarLabel.Text = "Обробляється";
 
             var fbd = new FolderBrowserDialog();
             fbd.ShowDialog();
+            stopwatch.Start();
             for (int i = 0; i < sheetNames.Count; i++)
             {
                 CreateOutputFile(selections[i], fbd.SelectedPath + "/output" + sheetNames[i] + ".xlsx");
             }
             progressBarLabel.Text = "Готово";
-
+            stopwatch.Stop();
+            MessageBox.Show(students[0].Count.ToString());
+            MessageBox.Show(stopwatch.ElapsedMilliseconds.ToString());
+            selections.Clear();
+            students.Clear();
+            disciplines.Clear();
+            button1.Enabled = false;
+            button2.Enabled = false;
         }
 
         private void CreateOutputFile(List<Selection> selections, string filename)
@@ -467,5 +479,6 @@ namespace DVRP1
             return Convert.ToDouble(percentstring.Trim(new char[] { '>', '=', '%' })) / 100;
 
         }
+
     }
 }

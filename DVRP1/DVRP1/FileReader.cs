@@ -20,24 +20,8 @@ namespace FileProcessor
         public FileReader(string filepath)
         {
             this.filepath = filepath;
-            try
-            {
-                spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("File is occupied by another process! Close it!", "ERROR");
-
-
-            }
-            finally
-            {
-                spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
-                workbookPart = spreadsheetDocument.WorkbookPart;
-            }
-
-
-
+            spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
+            workbookPart = spreadsheetDocument.WorkbookPart;
         }
 
         public string GetCellValue(string columnName, uint rowIndex, string sheetName)

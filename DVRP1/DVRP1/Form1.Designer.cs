@@ -85,7 +85,8 @@ namespace DVRP1
             this.progressBar1.Location = new System.Drawing.Point(13, 187);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(220, 23);
-            this.progressBar1.TabIndex = 4;            // 
+            this.progressBar1.TabIndex = 4;
+            // 
             // progressBarLabel
             // 
             this.progressBarLabel.AutoSize = true;
@@ -98,7 +99,7 @@ namespace DVRP1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(255, 222);
+            this.ClientSize = new System.Drawing.Size(245, 222);
             this.Controls.Add(this.progressBarLabel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.checkBox1);
