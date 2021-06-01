@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
 using FileProcessor;
 
@@ -125,7 +123,7 @@ namespace DVRP1
             return res;
         }
 
-        private uint MinMaxShitHappens(string shitstring)
+        private uint MinMax(string shitstring)
         {
             if (shitstring == "")
             {
@@ -174,8 +172,8 @@ namespace DVRP1
                         StringWrapper(Dop.GetCellValue("B", i, Dop.NameOfSheet(1))),
                         StringWrapper(Dop.GetCellValue("C", i, Dop.NameOfSheet(1))),
                         StringWrapper(Dop.GetCellValue("D", i, Dop.NameOfSheet(1))),
-                        MinMaxShitHappens(Dop.GetCellValue("E", i, Dop.NameOfSheet(1))),
-                        MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(1))),
+                        MinMax(Dop.GetCellValue("E", i, Dop.NameOfSheet(1))),
+                        MinMax(Dop.GetCellValue("F", i, Dop.NameOfSheet(1))),
                         Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(1))), un_bacalavr_select, un_bacalavr_condit_select));
                     i++;
                 }
@@ -187,7 +185,7 @@ namespace DVRP1
                         Dop.GetCellValue("E", i, Dop.NameOfSheet(2)),
                         Dop.GetCellValue("C", i, Dop.NameOfSheet(2)),
                         Dop.GetCellValue("D", i, Dop.NameOfSheet(2)),
-                        MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
+                        MinMax(Dop.GetCellValue("F", i, Dop.NameOfSheet(2))),
                         0,
                         Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(2))), fac_bacalavr_select, fac_bacalavr_condit_select));
 
@@ -201,7 +199,7 @@ namespace DVRP1
                         Dop.GetCellValue("E", i, Dop.NameOfSheet(3)),
                         Dop.GetCellValue("C", i, Dop.NameOfSheet(3)),
                         Dop.GetCellValue("D", i, Dop.NameOfSheet(3)),
-                        MinMaxShitHappens(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
+                        MinMax(Dop.GetCellValue("F", i, Dop.NameOfSheet(3))),
                         0,
                         Courses(Dop.GetCellValue("G", i, Dop.NameOfSheet(3))), fac_magistr_select, fac_magistr_condit_select));
 
@@ -217,15 +215,11 @@ namespace DVRP1
                 MessageBox.Show("Something went wrong while reading the file! Try again.", "Error!");
                 return;
             }
-
-
-
         }
 
 
         private void OpenStudentFiles_button(object sender, EventArgs e) //
         {
-            Stopwatch stopwatch = new Stopwatch();
             try
             {
                 progressBarLabel.Text = "Обробляється";
@@ -233,7 +227,6 @@ namespace DVRP1
                 opd.Filter = "*.xlsx | *.xlsx";
                 opd.Multiselect = true;
                 opd.ShowDialog();
-                stopwatch.Start();
                 string[] adresses = opd.FileNames;
                 progressBar1.Value = 0;
                 progressBar1.Maximum = adresses.Length;
@@ -244,7 +237,7 @@ namespace DVRP1
                     FileReader reader = new FileReader(adresses[i]);
                     uint currentRow = 2;
                     //sheets
-                    if (sheetNames.Count == 1 && sheetNames[0] == "маг.")
+                    if (checkBox2.Checked)
                         for (int c = 0; c < disciplines.Count; c++)
                         {
                             disciplines[i].ForChoose = un_magistr_select;
@@ -307,8 +300,6 @@ namespace DVRP1
 
                 button2.Enabled = true;
                 progressBarLabel.Text = "Готово";
-                stopwatch.Stop();
-                MessageBox.Show(stopwatch.ElapsedMilliseconds.ToString());
             }
             catch (Exception)
             {
@@ -359,21 +350,16 @@ namespace DVRP1
 
         private void CreateOutput(object sender, EventArgs e)
         {
-            Stopwatch stopwatch = new Stopwatch();
             
             progressBarLabel.Text = "Обробляється";
 
             var fbd = new FolderBrowserDialog();
             fbd.ShowDialog();
-            stopwatch.Start();
             for (int i = 0; i < sheetNames.Count; i++)
             {
                 CreateOutputFile(selections[i], fbd.SelectedPath + "/output" + sheetNames[i] + ".xlsx");
             }
             progressBarLabel.Text = "Готово";
-            stopwatch.Stop();
-            MessageBox.Show(students[0].Count.ToString());
-            MessageBox.Show(stopwatch.ElapsedMilliseconds.ToString());
             selections.Clear();
             students.Clear();
             disciplines.Clear();

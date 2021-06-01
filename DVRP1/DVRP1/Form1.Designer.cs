@@ -35,6 +35,7 @@ namespace DVRP1
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.progressBarLabel = new System.Windows.Forms.Label();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // StartButton
@@ -82,7 +83,7 @@ namespace DVRP1
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(13, 187);
+            this.progressBar1.Location = new System.Drawing.Point(9, 203);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(220, 23);
             this.progressBar1.TabIndex = 4;
@@ -90,16 +91,27 @@ namespace DVRP1
             // progressBarLabel
             // 
             this.progressBarLabel.AutoSize = true;
-            this.progressBarLabel.Location = new System.Drawing.Point(13, 164);
+            this.progressBarLabel.Location = new System.Drawing.Point(12, 183);
             this.progressBarLabel.Name = "progressBarLabel";
             this.progressBarLabel.Size = new System.Drawing.Size(0, 17);
             this.progressBarLabel.TabIndex = 5;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(12, 146);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(161, 21);
+            this.checkBox2.TabIndex = 6;
+            this.checkBox2.Text = "Магістрський рівень";
+            this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(245, 222);
+            this.ClientSize = new System.Drawing.Size(245, 238);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.progressBarLabel);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.checkBox1);
@@ -121,6 +133,7 @@ namespace DVRP1
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label progressBarLabel;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 
