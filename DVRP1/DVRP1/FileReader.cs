@@ -16,15 +16,71 @@ namespace FileProcessor
         private string filepath;
         WorkbookPart workbookPart;
         SpreadsheetDocument spreadsheetDocument;
+        List<SheetData> sheets;
 
         public FileReader(string filepath)
         {
+            sheets = new List<SheetData>();
             this.filepath = filepath;
             spreadsheetDocument = SpreadsheetDocument.Open(filepath, false);
             workbookPart = spreadsheetDocument.WorkbookPart;
+            int numOfSheets = SheetNumber();
+            for (int i = 0; i < numOfSheets; i++)
+            {
+                Sheet mysheet = (Sheet)workbookPart.Workbook.Sheets.ChildElements.GetItem(i);
+                Worksheet worksheet = ((WorksheetPart)workbookPart.GetPartById(mysheet.Id)).Worksheet;
+                SheetData currentSheet = (SheetData)worksheet.GetFirstChild<SheetData>();
+                sheets.Add(currentSheet);
+            }
         }
 
-        public string GetCellValue(string columnName, uint rowIndex, string sheetName)
+
+        public string GetCellValue(string columnName, uint rowIndex, int sheetName)
+        {
+            string value = "";
+            if (rowIndex - 1 >= sheets[sheetName].ChildElements.Count)
+                return GetCellValueOldVers(columnName, rowIndex, NameOfSheet(sheetName));
+            Row row = (Row)sheets[sheetName].ChildElements.GetItem((int)rowIndex - 1);
+            if (LetterToInt(columnName) - 1 >= row.ChildElements.Count)
+                return GetCellValueOldVers(columnName, rowIndex, NameOfSheet(sheetName));
+            Cell cell = (Cell)row.ChildElements.GetItem(LetterToInt(columnName) - 1);
+            if (cell.CellReference != columnName + rowIndex.ToString())
+                return GetCellValueOldVers(columnName, rowIndex, NameOfSheet(sheetName));
+            else
+                value = cell.InnerText;
+
+            if (cell.DataType != null)
+            {
+                switch (cell.DataType.Value)
+                {
+                    case CellValues.SharedString:
+                        var stringTable =
+                            workbookPart.GetPartsOfType<SharedStringTablePart>()
+                            .FirstOrDefault();
+                        if (stringTable != null)
+                        {
+                            value =
+                                stringTable.SharedStringTable
+                                .ElementAt(int.Parse(value)).InnerText;
+                        }
+                        break;
+                    case CellValues.Boolean:
+                        switch (value)
+                        {
+                            case "0":
+                                value = "FALSE";
+                                break;
+                            default:
+                                value = "TRUE";
+                                break;
+                        }
+                        break;
+                }
+            }
+            return value;
+        }
+
+        private string GetCellValueOldVers(string columnName, uint rowIndex, string sheetName)
         {
             string value = null;
             Sheet theSheet = workbookPart.Workbook.Descendants<Sheet>().
@@ -37,34 +93,17 @@ namespace FileProcessor
                 (WorksheetPart)(workbookPart.GetPartById(theSheet.Id));
             Cell theCell = wsPart.Worksheet.Descendants<Cell>().
              Where(c => c.CellReference == (columnName + rowIndex.ToString())).FirstOrDefault();
-
             if (theCell != null)
             {
                 value = theCell.InnerText;
-
-                // If the cell represents an integer number, you are done. 
-                // For dates, this code returns the serialized value that 
-                // represents the date. The code handles strings and 
-                // Booleans individually. For shared strings, the code 
-                // looks up the corresponding value in the shared string 
-                // table. For Booleans, the code converts the value into 
-                // the words TRUE or FALSE.
                 if (theCell.DataType != null)
                 {
                     switch (theCell.DataType.Value)
                     {
                         case CellValues.SharedString:
-
-                            // For shared strings, look up the value in the
-                            // shared strings table.
                             var stringTable =
                                 workbookPart.GetPartsOfType<SharedStringTablePart>()
                                 .FirstOrDefault();
-
-                            // If the shared string table is missing, something 
-                            // is wrong. Return the index that is in
-                            // the cell. Otherwise, look up the correct text in 
-                            // the table.
                             if (stringTable != null)
                             {
                                 value =
@@ -72,7 +111,6 @@ namespace FileProcessor
                                     .ElementAt(int.Parse(value)).InnerText;
                             }
                             break;
-
                         case CellValues.Boolean:
                             switch (value)
                             {
@@ -89,7 +127,6 @@ namespace FileProcessor
             }
             return value;
         }
-
         public string NameOfSheet(int num)
         {
             return workbookPart.Workbook.Descendants<Sheet>().ToList()[num].Name;

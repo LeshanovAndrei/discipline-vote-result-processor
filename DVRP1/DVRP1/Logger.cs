@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Globalization;
 using System.IO;
 
 namespace DVRP1
@@ -34,7 +31,7 @@ namespace DVRP1
         {
             using (StreamWriter sw = new StreamWriter(filepath, true, System.Text.Encoding.Default))
             {
-                sw.WriteLine(error);
+                sw.WriteLine(DateTime.Now.ToString() +": " + error);
             }
 
            /* using (FileStream fstream = new FileStream(filepath, FileMode.OpenOrCreate))

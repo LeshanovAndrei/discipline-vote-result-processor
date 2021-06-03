@@ -14,71 +14,34 @@ namespace FileProcessor
         private WorkbookPart workbookpart;
         private SpreadsheetDocument spreadsheetDocument;
         private string filepath;
+        List<SheetData> OutSheets;
+        List<string> OutSheetsNames;
+
 
         public FileWriter(string filepath)
         {
+            OutSheets = new List<SheetData>();
+            OutSheetsNames = new List<string>();
             this.filepath = filepath;
-            // Create a spreadsheet document by supplying the filepath.
-            // By default, AutoSave = true, Editable = true, and Type = xlsx.
             spreadsheetDocument = SpreadsheetDocument.
                  Create(filepath, SpreadsheetDocumentType.Workbook);
 
-            // Add a WorkbookPart to the document.
             workbookpart = spreadsheetDocument.AddWorkbookPart();
             workbookpart.Workbook = new Workbook();
 
-            // Add a WorksheetPart to the WorkbookPart.
             WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
             worksheetPart.Worksheet = new Worksheet(new SheetData());
 
-            // Add Sheets to the Workbook.
             Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.
                 AppendChild<Sheets>(new Sheets());
 
-            // Append a new worksheet and associate it with the workbook.
-            //Sheet sheet = new Sheet()
-            //{
-            //    Id = spreadsheetDocument.WorkbookPart.
-            //    GetIdOfPart(worksheetPart),
-            //    SheetId = 1,
-            //    Name = "mySheet"
-            //};
-            //sheets.Append(sheet);
-
             workbookpart.Workbook.Save();
-
-            //// Close the document.
-            //spreadsheetDocument.Close();
         }
-        //Добавление листа
+
         public void InsertWorksheet(string name)
         {
-
-            //using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(docName, true))
-            //{
-
-            WorksheetPart newWorksheetPart = spreadsheetDocument.WorkbookPart.AddNewPart<WorksheetPart>();
-            newWorksheetPart.Worksheet = new Worksheet(new SheetData());
-
-            Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>();
-            string relationshipId = spreadsheetDocument.WorkbookPart.GetIdOfPart(newWorksheetPart);
-
-            uint sheetId = 1;
-            if (sheets.Elements<Sheet>().Count() > 0)
-            {
-                sheetId = sheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
-            }
-
-            string sheetName = name;
-
-
-            Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
-            sheets.Append(sheet);
-            workbookpart.Workbook.Save();
-
-
-
-            //}
+            OutSheets.Add(new SheetData());
+            OutSheetsNames.Add(name);
         }
 
         private WorksheetPart GetWorksheetPart(WorkbookPart workbookPart, string sheetName)
@@ -87,19 +50,15 @@ namespace FileProcessor
             return (WorksheetPart)workbookPart.GetPartById(relId);
         }
 
+
+
         public void SetCellValue(string columnName, uint rowIndex, string val, string sheetName)
         {
-            WorksheetPart worksheetPart = GetWorksheetPart(workbookpart, sheetName);
-
             // Insert cell A1 into the new worksheet.
-            Cell cell = InsertCellInWorksheet(columnName, rowIndex, worksheetPart);
-
+            Cell cell = InsertCellInWorksheet(columnName, rowIndex, NumOfSheet(sheetName));
             // Set the value of cell A1.
             cell.CellValue = new CellValue(val);
             cell.DataType = new EnumValue<CellValues>(DataTypeDef(val));
-
-            // Save the new worksheet.
-            worksheetPart.Worksheet.Save();
         }
 
         private CellValues DataTypeDef(string val)
@@ -114,22 +73,20 @@ namespace FileProcessor
             return CellValues.Number;
         }
 
-        private Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
+        private Cell InsertCellInWorksheet(string columnName, uint rowIndex, int sheetNum)
         {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
             string cellReference = columnName + rowIndex;
 
             // If the worksheet does not contain a row with the specified row index, insert one.
             Row row;
-            if (sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).Count() != 0)
+            if (OutSheets[sheetNum].Elements<Row>().Where(r => r.RowIndex == rowIndex).Count() != 0)
             {
-                row = sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
+                row = OutSheets[sheetNum].Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
             }
             else
             {
                 row = new Row() { RowIndex = rowIndex };
-                sheetData.Append(row);
+                OutSheets[sheetNum].Append(row);
             }
 
             // If there is not a cell with the specified column name, insert one.  
@@ -152,20 +109,53 @@ namespace FileProcessor
 
                 Cell newCell = new Cell() { CellReference = cellReference };
                 row.InsertBefore(newCell, refCell);
-
-                worksheet.Save();
                 return newCell;
             }
         }
 
-        public void Close()
+        public void CloseAndExport()
         {
+            for (int i = 0; i < OutSheetsNames.Count; i++)
+            {
+                WorksheetPart newWorksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                newWorksheetPart.Worksheet = new Worksheet(OutSheets[i]);
+
+                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>();
+                string relationshipId = spreadsheetDocument.WorkbookPart.GetIdOfPart(newWorksheetPart);
+
+                uint sheetId = 1;
+                if (sheets.Elements<Sheet>().Count() > 0)
+                {
+                    sheetId = sheets.Elements<Sheet>().Select(s => s.SheetId.Value).Max() + 1;
+                }
+
+                string sheetName = OutSheetsNames[i];
+
+                Sheet sheet = new Sheet() { Id = relationshipId, SheetId = sheetId, Name = sheetName };
+                sheets.Append(sheet);
+            }
+            workbookpart.Workbook.Save();
             spreadsheetDocument.Close();
         }
 
         ~FileWriter()
         {
             
+        }
+
+        public string NameOfSheet(int num)
+        {
+            return OutSheetsNames[num];
+        }
+
+        public int NumOfSheet(string name)
+        {
+            for (int i = 0; i < OutSheetsNames.Count; i++)
+            {
+                if (OutSheetsNames[i] == name)
+                    return i;
+            }
+            return -1;
         }
     }
 }
