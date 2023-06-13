@@ -22,9 +22,10 @@ namespace DVRP1
 
         public void StatusCheck()
         {
-            if (students.Count > discipline.ForConditChoose)
+                status = 0;
+            if (students.Count >= discipline.ForConditChoose)
                 status = 1;
-            if (students.Count > discipline.ForChoose)
+            if (students.Count >= discipline.ForChoose)
                 status = 2;
         }
         private Discipline discipline;
