@@ -340,6 +340,8 @@ namespace DVRP1
                         }
                     }
                     reader.Close();
+                    //IllyaValidation(students);
+                    //CreateOutputValidStudentsFile();
                     progressBar1.PerformStep();
                 }
                 progressBar1.Value = 0;
@@ -536,6 +538,7 @@ namespace DVRP1
                     writer.SetCellValue("D", currentCellNumber, selection[i].Students[j].Group, "рапорт 2");
                     writer.SetCellValue("E", currentCellNumber, selection[i].Discipline.Code, "рапорт 2");
                     writer.SetCellValue("F", currentCellNumber, selection[i].Discipline.Name, "рапорт 2");
+                    writer.SetCellValue("G", currentCellNumber, selection[i].Students[j].Email, "рапорт 2");
                     currentCellNumber++;
                 }
                 progressBar1.PerformStep();
